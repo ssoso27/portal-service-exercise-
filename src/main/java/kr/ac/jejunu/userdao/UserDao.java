@@ -12,9 +12,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class UserDao {
-    private JdbcTemplate jdbcTemplate;
+    private JejuJdbcTemplate jdbcTemplate;
 
-    public UserDao(JdbcTemplate jdbcTemplate) {
+    public UserDao(JejuJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
