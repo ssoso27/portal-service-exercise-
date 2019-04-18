@@ -5,9 +5,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public abstract class UserDao {
+public class UserDao {
+    private ConnectionMaker connectionMaker;
+
+    public UserDao(ConnectionMaker connectionMaker) {
+        this.connectionMaker = connectionMaker;
+    }
+
     public User get(Long id) throws ClassNotFoundException, SQLException {
-        Connection connection = getConnection();
+        Connection connection = connectionMaker.getConnection();
         PreparedStatement preparedStatement =
                 connection.prepareStatement("select * from userinfo where id = ?");
         preparedStatement.setLong(1, id);
@@ -28,7 +34,7 @@ public abstract class UserDao {
     }
 
     public Long add(User user) throws SQLException, ClassNotFoundException {
-        Connection connection = getConnection();
+        Connection connection = connectionMaker.getConnection();
 
         PreparedStatement preparedStatement =
                 connection.prepareStatement("INSERT INTO userinfo(name, password) VALUES (?, ?);");
@@ -49,6 +55,4 @@ public abstract class UserDao {
         //리턴
         return id;
     }
-
-    abstract Connection getConnection() throws ClassNotFoundException, SQLException;
 }
