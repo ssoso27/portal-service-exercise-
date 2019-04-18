@@ -1,6 +1,7 @@
 package kr.ac.jejunu.userdao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class UserDao {
@@ -11,41 +12,65 @@ public class UserDao {
     }
 
     public User get(Long id) throws SQLException {
-        StatementStrategy statementStrategy = new GetStatementStrategy(id);
-        return jdbcContext.jdbcContextForGet(statementStrategy);
-    }
+        String sql = "select * from userinfo where id = ?";
+        Object[] params = new Object[]{id};
 
-    private User jdbcContextForGet(StatementStrategy statementStrategy) throws SQLException {
+        StatementStrategy statementStrategy = connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i+1, params[i]);
+            }
+
+            return preparedStatement;
+        };
 
         return jdbcContext.jdbcContextForGet(statementStrategy);
     }
 
     public Long add(User user) throws SQLException {
-        StatementStrategy statementStrategy = new AddStatementStrategy(user);
-        return jdbcContext.jdbcContextForAdd(statementStrategy);
-    }
+        String sql = "INSERT INTO userinfo(name, password) VALUES (?, ?);";
+        Object[] params = new Object[]{user.getName(), user.getPassword()};
 
-    private Long jdbcContextForAdd(StatementStrategy statementStrategy) throws SQLException {
+        StatementStrategy statementStrategy = connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i+1, params[i]);
+            }
+
+            return preparedStatement;
+        };
+
         return jdbcContext.jdbcContextForAdd(statementStrategy);
     }
 
     public void update(User user) {
-        StatementStrategy statementStrategy = new UpdateStatementStrategy(user);
-        jdbcContext.jdbcContextForUpdate(statementStrategy);
-    }
+        String sql = "UPDATE userinfo SET name = ?, password = ? where id = ?;";
+        Object[] params = new Object[]{user.getName(), user.getPassword(), user.getId()};
 
-    private void jdbcContextForUpdate(StatementStrategy statementStrategy) {
+        StatementStrategy statementStrategy = connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i+1, params[i]);
+            }
+
+            return preparedStatement;
+        };
 
         jdbcContext.jdbcContextForUpdate(statementStrategy);
     }
 
     public void delete(Long id) {
-        StatementStrategy statementStrategy = new DeleteStatementStrategy(id);
+        String sql = "DELETE FROM userinfo WHERE id=?;";
+        Object[] params = new Object[]{id};
+
+        StatementStrategy statementStrategy = connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i+1, params[i]);
+            }
+            return preparedStatement;
+        };
+
         jdbcContext.jdbcContextForUpdate(statementStrategy);
-    }
-
-    private Long getLastInsertId(Connection connection) throws SQLException {
-
-        return jdbcContext.getLastInsertId(connection);
     }
 }
