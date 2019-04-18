@@ -1,8 +1,11 @@
 package kr.ac.jejunu.userdao;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class UserDao {
+public abstract class UserDao {
     public User get(Long id) throws ClassNotFoundException, SQLException {
         Connection connection = getConnection();
         PreparedStatement preparedStatement =
@@ -47,9 +50,5 @@ public class UserDao {
         return id;
     }
 
-    private Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        return DriverManager.getConnection("jdbc:mysql://localhost/jeju?serverTimezone=UTC"
-        , "jeju", "jejupw");
-    }
+    abstract Connection getConnection() throws ClassNotFoundException, SQLException;
 }
