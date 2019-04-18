@@ -49,4 +49,42 @@ public class UserDaoTests {
         assertThat(resultUser.getName(), is(user.getName()));
         assertThat(resultUser.getPassword(), is(user.getPassword()));
     }
+
+    @Test
+    public void testUpdate() throws SQLException {
+        // 한놈 넣어보고
+        String name = "김말이";
+        String password = "tasty";
+        User user = new User();
+        user.setName(name);
+        user.setPassword(password);
+
+        Long id = userDao.add(user);
+        user.setId(id);
+
+        // 그놈 정보 수정한 다음에
+        String newName = "떡볶이";
+        String newPassword = "delicious";
+        user.setName(newName);
+        user.setPassword(newPassword);
+
+        // update 하고
+        userDao.update(user);
+
+        // 그놈 아이디 넣어서 다시 가져오고
+        User result = userDao.get(id);
+
+        // 수정정보 확인
+        assertThat(result.getId(), is(id));
+        assertThat(result.getName(), is(newName));
+        assertThat(result.getPassword(), is(newPassword));
+    }
+
+    @Test
+    public void testDelete() {
+        // 한놈 넣어보고
+        // 그놈 삭제하고
+        // 다시 가져와서
+        // 있는지 확인
+    }
 }
