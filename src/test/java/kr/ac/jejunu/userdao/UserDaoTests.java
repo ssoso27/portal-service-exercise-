@@ -12,6 +12,7 @@ import static org.hamcrest.core.Is.is;
 
 public class UserDaoTests {
     private UserDao userDao;
+    private DaoFactory daoFactory;
 
     @Before
     public void setup() {
