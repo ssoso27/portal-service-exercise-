@@ -1,18 +1,13 @@
 package kr.ac.jejunu.userdao;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 
-import java.sql.*;
+import java.sql.SQLException;
 
 public class UserDao {
-    private JdbcTemplate jdbcTemplate;
+    private JejuJdbcTemplate jdbcTemplate;
 
-    public UserDao(JdbcTemplate jdbcTemplate) {
+    public UserDao(JejuJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -39,20 +34,7 @@ public class UserDao {
         String sql = "INSERT INTO userinfo(name, password) VALUES (?, ?);";
         Object[] params = new Object[]{user.getName(), user.getPassword()};
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(new PreparedStatementCreator() {
-            @Override
-            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                PreparedStatement preparedStatement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                for (int i = 0; i < params.length; i++) {
-                    preparedStatement.setObject(i+1, params[i]);
-                }
-                return preparedStatement;
-            }
-        }, keyHolder);
-
-        return keyHolder.getKey().longValue();
+        return jdbcTemplate.insert(sql, params);
     }
 
     public void update(User user) {

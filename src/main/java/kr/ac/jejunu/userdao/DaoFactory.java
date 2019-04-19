@@ -21,8 +21,8 @@ public class DaoFactory {
     private String passwrord;
 
     @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource());
+    public JejuJdbcTemplate jdbcTemplate() {
+        return new JejuJdbcTemplate(dataSource());
     }
 
     @Bean
