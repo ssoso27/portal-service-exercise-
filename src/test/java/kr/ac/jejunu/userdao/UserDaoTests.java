@@ -8,6 +8,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import java.sql.SQLException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 
 public class UserDaoTests {
@@ -83,7 +84,23 @@ public class UserDaoTests {
     }
 
     @Test
-    public void testDelete() {
+    public void testDelete() throws SQLException {
+        // 새로운애 넣고
+        String name = "강아지";
+        String password = "puppy";
+        User user = new User();
+        user.setName(name);
+        user.setPassword(password);
+        Long id = userDao.add(user);
+        user.setId(id);
 
+        // 걔 delete
+        userDao.delete(user.getId());
+
+        // 다시 get해서
+        User result = userDao.get(user.getId());
+
+        // nullValue인지 확인
+        assertThat(result, nullValue());
     }
 }
